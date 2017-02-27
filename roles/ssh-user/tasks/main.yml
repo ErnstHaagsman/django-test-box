@@ -1,0 +1,11 @@
+---
+- name: Create user
+  user:
+    name: "{{ ssh_user }}"
+    password: "{{ ssh_password|password_hash('sha512') }}"
+
+- name: Make sure the user is in the sudoers file
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    line: "{{ ssh_user }} ALL=(ALL) ALL"

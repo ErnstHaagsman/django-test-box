@@ -1,0 +1,40 @@
+---
+- name: Install postgres
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - postgresql
+    - postgresql-contrib
+    - libpq-dev
+    - python-pip # This is necessary to install psycopg2 for python 2
+
+
+- name: Install psycopg
+  pip:
+    name: psycopg2
+    state: latest
+    executable: pip2
+
+- name: Create database
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    name: "{{ db_dbname }}"
+
+
+- name: Create postgresql user
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name: "{{ db_user }}"
+    db: "{{ db_dbname }}"
+    password: "{{ db_password }}"
+    priv: ALL
+
+
+- name: Remove psycopg
+  pip:
+    name: psycopg2
+    state: absent
+    executable: pip2

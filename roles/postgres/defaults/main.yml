@@ -1,0 +1,4 @@
+---
+db_user: "djangocon"
+db_password: "jetbrains123"
+db_dbname: "djangocon"
