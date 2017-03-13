@@ -2,6 +2,7 @@
 - name: Create user
   user:
     name: "{{ ssh_user }}"
+    shell: /bin/bash
     password: "{{ ssh_password|password_hash('sha512') }}"
 
 - name: Make sure the user is in the sudoers file
