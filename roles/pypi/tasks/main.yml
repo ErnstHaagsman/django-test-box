@@ -1,0 +1,48 @@
+---
+- name: Update pip and setuptools
+  pip:
+    name: "{{ item }}"
+    state: latest
+    executable: pip3
+  with_items:
+    - pip2pi
+
+
+- name: Create directory for packages
+  file:
+    path: /var/www/packages
+    state: directory
+
+
+- name: Copy requirements.txt
+  copy:
+    src: requirements.txt
+    dest: ~/requirements.txt
+
+
+- name: Download packages
+  command: pip2tgz /var/www/packages -r ~/requirements.txt
+
+
+- name: Create package index
+  command: dir2pi /var/www/packages/
+
+
+- name: Add PIP INDEX URL env var to /etc/profile.d
+  copy:
+    src: custom-pip-repo.sh
+    dest: /etc/profile.d/custom-pip-repo.sh
+    mode: 0644
+
+
+- name: Keep PIP INDEX URL env var with sudo
+  copy:
+    src: sudo-keep-pip-path
+    dest: /etc/sudoers.d/sudo-keep-pip-path
+    mode: 0440
+
+
+- name: Add pip conf file
+  copy:
+    src: pip.conf
+    dest: /etc/pip.conf

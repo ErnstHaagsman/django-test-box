@@ -1,0 +1,1 @@
+Defaults env_keep += "PIP_INDEX_URL"
